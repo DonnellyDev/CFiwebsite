@@ -1,139 +1,367 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useState } from 'react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 
 export const Route = createFileRoute('/manufacturers')({ component: ManufacturersPage })
 
 function ManufacturersPage() {
   return (
-    <div className="min-h-screen bg-[#f7faf5] pt-24">
-      {/* Hero */}
-      <section className="py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-4 block">
+    <div className="min-h-screen bg-[#f7faf5] overflow-x-hidden">
+      {/* ============ HERO ============ */}
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/manufacturer-hero-video.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+        </div>
+        <div className="relative z-10 w-full px-6 sm:px-12 lg:px-24 pt-32 pb-20">
+          <span className="text-sm font-semibold text-emerald-400 tracking-widest uppercase mb-4 block">
             For Manufacturers
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-6">
-            Expand your{' '}
-            <span className="text-emerald-600">reach</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-[1.1] mb-6 max-w-3xl">
+            Partner with CFi.
           </h1>
-          <p className="text-lg sm:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Help your dealer network offer financing that drives volume, builds
-            loyalty, and accelerates your products into the hands of growers.
+          <p className="text-lg sm:text-xl text-white/90 font-light mb-10 max-w-xl leading-relaxed">
+            Offer growers flexible financing and buy-down options that increase adoption, 
+            accelerate sell-through, and strengthen retailer relationships.
           </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 text-base font-semibold rounded-lg transition-all shadow-lg shadow-emerald-600/30"
+          >
+            Connect With Our Team
+            <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
-      {/* Benefits */}
-      <section className="py-16 md:py-24 px-4 sm:px-6">
+      {/* ============ STRATEGIC IMPERATIVE ============ */}
+      <section className="pt-10 md:pt-14 pb-16 md:pb-24 px-4 sm:px-6 bg-[#f7faf5]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Manufacturer's <span className="text-emerald-700">Strategic Imperative</span>
+            </h2>
+            <p className="text-gray-600 max-w-4xl mx-auto">
+              Manufacturing leaders face unprecedented pressure to differentiate at the critical retail point of sale.
+            </p>
+          </div>
+          {/* Alternating left-right layout */}
+          <div className="space-y-8">
             {[
-              {
-                title: 'Increase Volume',
-                desc: 'Dealers with financing options sell more product, faster. Empower your network with the tools they need.',
-              },
-              {
-                title: 'Strengthen Loyalty',
-                desc: 'Branded financing programs keep your dealer network engaged and committed to your products.',
-              },
-              {
-                title: 'Simplify Programs',
-                desc: 'One platform to manage all your dealer financing programs. No more spreadsheets or manual tracking.',
-              },
+              { title: 'Traditional Financing Falls Short', desc: 'Purely transactional, without any strategic influence at the point of sale.' },
+              { title: 'No Access to Retail Network', desc: 'Limited to your own partner network with no broader reach.' },
+              { title: 'Visibility Gap Costs Millions', desc: 'Lacking real-time data — marketing relies on outdated signals.' },
+              { title: 'Retailers Choose Winners', desc: 'Retailers favor manufacturers who equip them to boost engagement and sales.' },
             ].map((item, i) => (
-              <div key={i} className="text-center bg-white rounded-2xl p-8 border border-gray-100">
-                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <span className="text-2xl font-black text-emerald-600">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
+              <div key={i} className={`flex items-center gap-6 ${i % 2 === 1 ? 'flex-row-reverse' : ''}`}>
+                <div className="hidden sm:block w-12 h-12 shrink-0 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-lg">
+                  <span className="flex items-center justify-center w-full h-full">{i + 1}</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {item.title}
-                </h3>
-                <p className="text-gray-500">{item.desc}</p>
+                <div className={`flex-1 bg-white rounded-xl p-6 shadow-sm border-l-4 border-emerald-600 ${i % 2 === 1 ? 'border-l-0 border-r-4' : ''}`}>
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h3>
+                  <p className="text-gray-500 text-sm">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-16 md:py-24 px-4 sm:px-6 bg-gray-50">
+      {/* ============ MARKET LEADING ENABLER ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#dde6d5]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-6">
-                Power your dealer network
-              </h2>
-              <p className="text-gray-500 leading-relaxed mb-8">
-                CFi provides manufacturers with a turnkey financing solution that 
-                integrates seamlessly with your existing dealer relationships. 
-                Track performance, manage programs, and grow sales—all from one platform.
-              </p>
-              <ul className="space-y-4">
-                {[
-                  'Centralized program management',
-                  'Real-time performance analytics',
-                  'Customizable financing terms',
-                  'Dedicated account support',
-                  'Co-branded marketing materials',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                    <span className="text-gray-700">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl p-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">
-                Partner Benefits
-              </h3>
-              <p className="text-emerald-100 mb-6">
-                Join leading agricultural manufacturers who trust CFi to power 
-                their dealer financing programs.
-              </p>
-              <div className="grid grid-cols-2 gap-6">
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-4 block">
+              The Market Leading Enabler
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Only Platform Combining <span className="text-emerald-700">Financing Power With Intelligence</span> at Scale
+            </h2>
+          </div>
+          {/* Icon-left horizontal cards */}
+          <div className="space-y-6">
+            {[
+              {
+                icon: '📊',
+                title: 'SKU-Level Sales Intelligence',
+                desc: 'Track individual product performance across your entire retailer network in real time.',
+              },
+              {
+                icon: '📈',
+                title: 'Category Benchmarking',
+                desc: 'Compare performance against competitors and track adoption trends across categories.',
+              },
+              {
+                icon: '🗺️',
+                title: 'Regional Movement Heatmaps',
+                desc: 'Visualize geographic demand patterns and identify emerging markets before anyone else.',
+              },
+            ].map((item, i) => (
+              <div key={i} className="bg-white rounded-xl p-6 sm:p-8 shadow-md flex items-start gap-5">
+                <span className="text-3xl shrink-0">{item.icon}</span>
                 <div>
-                  <div className="text-4xl font-black text-white mb-1">30%</div>
-                  <div className="text-emerald-200 text-sm">Average sales increase</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">2x</div>
-                  <div className="text-emerald-200 text-sm">Dealer engagement</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">100+</div>
-                  <div className="text-emerald-200 text-sm">Active dealers</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">$50M+</div>
-                  <div className="text-emerald-200 text-sm">Financed annually</div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ HOW IT WORKS ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#f7faf5]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-4 block">
+              How It Works
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+              Simple, Flexible, <span className="text-emerald-700">Strategic</span>
+            </h2>
+          </div>
+          {/* Timeline / steps layout */}
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-emerald-200 hidden sm:block" />
+            <div className="space-y-10">
+              {[
+                {
+                  step: '01',
+                  title: 'Tell Us About Your Business',
+                  desc: 'Provide your product categories and sales channels so we can tailor the program to your needs.',
+                },
+                {
+                  step: '02',
+                  title: 'Select Products for Financing',
+                  desc: 'Identify which products will benefit from a strategic buy-down to drive adoption and volume.',
+                },
+                {
+                  step: '03',
+                  title: 'Design Interest & Repayment',
+                  desc: 'Set tailored interest rates and repayment schedules that align with your seasonality.',
+                },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-6 sm:pl-0">
+                  <div className="relative z-10 w-12 h-12 shrink-0 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shadow-lg">
+                    {item.step}
+                  </div>
+                  <div className="pt-1">
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 md:py-24 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-6">
-            Ready to empower your dealers?
-          </h2>
-          <p className="text-gray-500 mb-8 max-w-xl mx-auto">
-            Schedule a demo to see how CFi can help you grow your dealer network and increase sales.
-          </p>
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-full font-bold hover:bg-emerald-700 transition-colors"
-          >
-            Schedule a Demo
-            <ArrowRight className="w-5 h-5" />
-          </a>
+      {/* ============ NO RISK JUST REWARD ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#dde6d5]">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-4 block">
+                No Risk — Just Reward
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-snug mb-8">
+                Partnering with CFi <span className="text-emerald-700">has its benefits</span>
+              </h2>
+              <ul className="space-y-6">
+                {[
+                  { title: 'Align Marketing Spend to Demand', desc: 'Connect marketing investment directly to real purchasing activity with measurable ROI.' },
+                  { title: 'Strengthen Retailer Relationships', desc: 'Empower retail partners with financing tools that drive adoption and loyalty.' },
+                  { title: 'Optimize Sales Deployment', desc: 'Focus sales and field resources on the highest-converting regions using performance data.' },
+                  { title: 'Accelerate Product Launches', desc: 'Introduce new products with data-backed confidence, reducing risk and improving uptake.' },
+                  { title: 'Expand Market Reach with Precision', desc: 'Use insights from real transactions to guide expansion and future growth strategies.' },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="text-emerald-600 mt-1 font-bold">{i + 1}.</span>
+                    <div>
+                      <p className="font-semibold text-gray-900">{item.title}</p>
+                      <p className="text-gray-500 text-sm mt-1">{item.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl overflow-hidden shadow-lg">
+              <img src="/handshake-field.png" alt="Partner with CFi" className="w-full h-full object-cover" />
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* ============ STRATEGIC OUTCOMES ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#f7faf5]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-4 block">
+              Strategic Partnership Outcomes
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Helping Manufacturers <span className="text-emerald-700">Dominate Their Markets</span>
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              By empowering retail partners with financing and intelligence at the point of sale.
+            </p>
+          </div>
+          {/* Large feature blocks */}
+          <div className="grid md:grid-cols-3 gap-0 rounded-2xl overflow-hidden shadow-lg">
+            {[
+              { title: 'Align Marketing Investment', desc: 'Connect marketing spend directly to demand with measurable ROI.', bg: 'bg-emerald-800' },
+              { title: 'Optimize Sales Deployment', desc: 'Deploy sales resources to highest conversion regions based on performance data.', bg: 'bg-emerald-700' },
+              { title: 'Launch With Precision', desc: 'Introduce new products with data-backed confidence and reduced risk.', bg: 'bg-emerald-600' },
+            ].map((item, i) => (
+              <div key={i} className={`${item.bg} p-8 sm:p-10 text-white`}>
+                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                <p className="text-emerald-100 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ STATS BANNER ============ */}
+      <section className="py-16 md:py-20 px-4 sm:px-6 bg-[#dde6d5]">
+        <div className="max-w-4xl mx-auto text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+            Tap into <span className="text-emerald-700">100+ active dealers</span> and growing
+          </h2>
+          <p className="text-gray-600 mt-4 max-w-xl mx-auto">
+            Let your dealer network offer instant financing, driving incremental sales and growth for your business.
+          </p>
+        </div>
+        <div className="max-w-3xl mx-auto grid grid-cols-3 gap-8">
+          {[
+            { value: '$800M+', label: 'Financing enabled annually' },
+            { value: '100+', label: 'Active retail partners' },
+            { value: '<10 Min.', label: 'Paperless application' },
+          ].map((stat, i) => (
+            <div key={i} className="text-center">
+              <div className="text-3xl sm:text-4xl font-black text-emerald-800">{stat.value}</div>
+              <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+        <div className="max-w-md mx-auto mt-12 text-center">
+          <ul className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-gray-600 mb-8">
+            <li className="flex items-center gap-2">
+              <span className="text-emerald-600">&#10003;</span> Free sign-up
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-emerald-600">&#10003;</span> Easy integration
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-emerald-600">&#10003;</span> Transparent pricing
+            </li>
+          </ul>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-4 rounded-full font-bold text-lg transition-colors"
+          >
+            Get Started
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ============ FAQ ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#f7faf5]">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+              Frequently Asked <span className="text-emerald-700">Questions</span>
+            </h2>
+            <p className="text-gray-600 mt-3">
+              Got questions? Check out our FAQs or get in touch with us to learn more.
+            </p>
+          </div>
+          <ManufacturerFaq />
+        </div>
+      </section>
+
+      {/* ============ CTA ============ */}
+      <section className="py-20 md:py-24 px-4 sm:px-6 bg-[#dde6d5]">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-6">
+            Ag Finance. <span className="text-emerald-700">Delivered.</span>
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-10">
+            Ready to dominate your market? Connect with our team today.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 bg-emerald-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-800 transition-colors"
+          >
+            Connect With Our Team
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+const manufacturerFaqs = [
+  {
+    q: 'Why should my company partner with CFi?',
+    a: 'As a CFi manufacturer partner, you gain access to our network of 100+ active dealers, SKU-level sales intelligence, category benchmarking, and regional demand heatmaps. You\'ll differentiate at the point of sale with financing that drives volume and loyalty.',
+  },
+  {
+    q: 'How does CFi help me align marketing spend to demand?',
+    a: 'CFi connects your marketing investment directly to real purchasing activity with measurable ROI. Our platform provides real-time data on what products are moving, where, and at what velocity — so you can deploy resources with precision.',
+  },
+  {
+    q: 'What intelligence does CFi provide?',
+    a: 'CFi is the only platform combining financing power with intelligence at scale. You get SKU-level sales tracking, category benchmarking against competitors, and regional movement heatmaps to visualize geographic demand patterns and identify emerging markets.',
+  },
+  {
+    q: 'How does the buy-down program work?',
+    a: 'You select which products benefit from a strategic buy-down, then design tailored interest rates and repayment schedules aligned with seasonality. CFi handles the financing lifecycle while you gain visibility into adoption and performance.',
+  },
+  {
+    q: 'How do I get started as a manufacturer partner?',
+    a: 'Getting started is simple — tell us about your crop input business, select products for the financing program, and we\'ll design interest and repayment terms together. Fill out our contact form and a member of our Partnerships team will reach out.',
+  },
+]
+
+function ManufacturerFaq() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  return (
+    <div className="space-y-3">
+      {manufacturerFaqs.map((faq, i) => (
+        <div key={i} className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <button
+            onClick={() => setOpenIndex(openIndex === i ? null : i)}
+            className="w-full flex items-center justify-between px-6 py-5 text-left"
+          >
+            <span className="font-semibold text-gray-900 text-sm sm:text-base pr-4">{faq.q}</span>
+            <ChevronDown
+              className={`w-5 h-5 text-emerald-700 shrink-0 transition-transform duration-300 ${
+                openIndex === i ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              openIndex === i ? 'max-h-60 pb-5' : 'max-h-0'
+            }`}
+          >
+            <p className="px-6 text-gray-500 text-sm leading-relaxed">{faq.a}</p>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
