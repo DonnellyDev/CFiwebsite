@@ -53,7 +53,7 @@ function NewsPage() {
   const regularArticles = articles.filter(a => !a.featured)
 
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="min-h-screen bg-[#f7faf5] pt-24">
       {/* Hero */}
       <section className="py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
         <div className="max-w-4xl mx-auto text-center">

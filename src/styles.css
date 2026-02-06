@@ -69,16 +69,10 @@ body {
   animation: fade-in 0.4s ease-out forwards;
 }
 
-/* Header slide-down bounce animation */
+/* Header slide-down animation */
 @keyframes header-slide-in {
   0% {
     transform: translateY(-100%);
-  }
-  65% {
-    transform: translateY(6px);
-  }
-  80% {
-    transform: translateY(-3px);
   }
   100% {
     transform: translateY(0);
@@ -95,7 +89,7 @@ body {
 }
 
 .header-visible {
-  animation: header-slide-in 0.7s ease-out forwards;
+  animation: header-slide-in 0.4s ease-out forwards;
 }
 
 .header-hidden {

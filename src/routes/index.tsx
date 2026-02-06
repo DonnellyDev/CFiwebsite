@@ -1,14 +1,51 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
-import {
-  ArrowRight,
-  CheckCircle2,
-} from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import CountUp from 'react-countup'
+import { ArrowRight } from 'lucide-react'
 
 export const Route = createFileRoute('/')({ component: HomePage })
 
+function AnimatedStat({ num, prefix, suffix, label, delay, text }: { num?: number; prefix?: string; suffix?: string; label: string; delay: number; text?: string }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-50px' })
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay }}
+      className="flex flex-col items-center text-center"
+    >
+      <div className="text-2xl sm:text-3xl md:text-4xl font-black text-emerald-800 whitespace-nowrap">
+        {text ? (
+          text
+        ) : isInView ? (
+          <CountUp
+            start={0}
+            end={num || 0}
+            duration={2}
+            delay={delay}
+            prefix={prefix || ''}
+            suffix={suffix || ''}
+            useEasing
+          />
+        ) : (
+          <span>{prefix}{0}{suffix}</span>
+        )}
+      </div>
+      <div className="text-sm sm:text-base text-gray-600 mt-2">{label}</div>
+    </motion.div>
+  )
+}
+
 function HomePage() {
-  const stats = [
+  const [currentStat, setCurrentStat] = useState(0)
+  const introRef = useRef(null)
+  const introInView = useInView(introRef, { once: true, margin: '-80px' })
+
+  const mobileStats = [
     { value: '$800M+', label: 'Financing Enabled Annually' },
     { value: '100+', label: 'Ag Retail Partners' },
     { value: 'Up to $1M', label: 'Instant Credit Approvals' },
@@ -16,26 +53,28 @@ function HomePage() {
     { value: 'Same-Day', label: 'Funding Capability' },
   ]
 
-  const [currentStat, setCurrentStat] = useState(0)
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % stats.length)
+      setCurrentStat((prev) => (prev + 1) % mobileStats.length)
     }, 2500)
     return () => clearInterval(interval)
-  }, [stats.length])
+  }, [mobileStats.length])
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#f7faf5] overflow-x-hidden">
       {/* ============ HERO SECTION ============ */}
       <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background Image */}
+        {/* Background Video */}
         <div className="absolute inset-0 z-0">
-          <img
-            src="/hero-bg.png"
-            alt=""
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="w-full h-full object-cover"
-          />
+          >
+            <source src="/teavalley-preview.mp4" type="video/mp4" />
+          </video>
           {/* Gradient overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
         </div>
@@ -66,150 +105,351 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ============ STATS BAR ============ */}
-      <section className="relative z-10 bg-white py-8 sm:py-10 border-b border-gray-100">
-        <div className="w-full px-6 sm:px-12 lg:px-24">
-          {/* Mobile: auto-cycling single stat */}
+      {/* ============ INTRO + STATS COMBINED ============ */}
+      <section className="bg-[#dde6d5] pt-20 md:pt-28 pb-12 md:pb-16 px-4 sm:px-6" ref={introRef}>
+        <div className="max-w-6xl mx-auto">
+          {/* Two-column: text left, image right */}
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center mb-16 md:mb-20">
+            {/* Left: Text */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={introInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.7 }}
+            >
+              <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-4 block">
+                Why CFi?
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-snug mb-5">
+                A Digital Financing Platform At The Intersection Of{' '}
+                <span className="text-emerald-800 font-extrabold">Fintech And Agriculture</span>
+              </h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={introInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="text-gray-600 leading-relaxed mb-8"
+              >
+                Instant, paperless financing at the point of sale — connecting 
+                manufacturers, retailers, and growers to accelerate purchasing 
+                and unlock early-season demand.
+              </motion.p>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Connect With Our Team
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            {/* Right: Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={introInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/10 aspect-[4/3]">
+                <img
+                  src="/seeder-v2.png"
+                  alt="Agricultural seeder in field"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Stats row */}
+          {/* Mobile: auto-cycling */}
           <div className="sm:hidden">
-            <div className="flex flex-col items-center text-center min-h-[60px]">
+            <div className="flex flex-col items-center text-center min-h-[80px]">
               <div 
                 key={currentStat}
                 className="animate-fade-in flex flex-col items-center"
               >
-                <div className="text-3xl font-black text-emerald-700">{stats[currentStat].value}</div>
-                <div className="text-sm text-gray-500 mt-1">{stats[currentStat].label}</div>
+                <div className="text-4xl font-black text-emerald-800">{mobileStats[currentStat].value}</div>
+                <div className="text-sm text-gray-600 mt-2">{mobileStats[currentStat].label}</div>
               </div>
             </div>
-            {/* Dots indicator */}
             <div className="flex justify-center gap-2 mt-4">
-              {stats.map((_, i) => (
+              {mobileStats.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentStat(i)}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    i === currentStat ? 'bg-emerald-600' : 'bg-gray-300'
+                    i === currentStat ? 'bg-emerald-700' : 'bg-gray-400'
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Tablet+: grid */}
-          <div className="hidden sm:grid sm:grid-cols-5 sm:gap-4 max-w-6xl mx-auto">
-            {stats.map((stat, i) => (
-              <div key={i} className="flex flex-col items-center text-center">
-                <div className="text-2xl md:text-3xl font-black text-emerald-700 whitespace-nowrap">{stat.value}</div>
-                <div className="text-xs text-gray-500 mt-1">{stat.label}</div>
+          {/* Desktop: 5-column count-up */}
+          <div className="hidden sm:grid sm:grid-cols-5 gap-6 border-t border-emerald-800/20 pt-12">
+            <AnimatedStat num={800} prefix="$" suffix="M+" label="Financing Enabled Annually" delay={0} />
+            <AnimatedStat num={100} suffix="+" label="Ag Retail Partners" delay={0.15} />
+            <AnimatedStat num={1} prefix="Up to $" suffix="M" label="Instant Credit Approvals" delay={0.3} />
+            <AnimatedStat num={10} prefix="<" suffix=" Min." label="Paperless Application Time" delay={0.45} />
+            <AnimatedStat text="Same-Day" label="Funding Capability" delay={0.6} />
+          </div>
+
+          {/* Tagline */}
+          <motion.p
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={introInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.5, delay: 1.2 }}
+            className="text-center text-lg sm:text-xl md:text-2xl font-bold text-emerald-800 mt-10"
+          >
+            CFi Isn't Just Financing. It's The Future Of Ag Commerce.
+          </motion.p>
+        </div>
+      </section>
+
+
+      {/* ============ INFO CAROUSEL ============ */}
+      <section className="py-12 md:py-20 bg-[#f7faf5] overflow-hidden">
+        <div className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 px-6 sm:px-12 lg:px-16" style={{ scrollBehavior: 'smooth' }}>
+          {[
+            { img: 'https://placecats.com/600/300', title: 'How It', accent: 'Works.', items: [
+              { bold: 'Embedded at Point of Sale', desc: 'Financing built directly into manufacturer programs.' },
+              { bold: 'Instant Application', desc: 'Growers apply digitally in minutes.' },
+              { bold: 'Immediate Approval & Funding', desc: 'Complete purchases without delays.' },
+              { bold: 'Intelligence & Optimization', desc: 'Real-time data powers smarter decisions.' },
+            ]},
+            { img: 'https://placecats.com/601/300', title: 'Ag Financing', accent: 'Platform.', items: [
+              { bold: 'Up to $1M Credit Lines', desc: 'Large approvals for serious growers.' },
+              { bold: 'Flexible Repayment', desc: 'Terms aligned to harvest cycles.' },
+              { bold: 'Same-Day Funding', desc: 'Retailers get paid fast, every time.' },
+              { bold: '100% Digital', desc: 'Zero paperwork, fully online process.' },
+            ]},
+          ].map((card, i) => (
+            <div key={i} className="shrink-0 w-[85vw] sm:w-[45vw] lg:w-[31%] snap-start bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="h-64 overflow-hidden">
+                <img src={card.img} alt="" className="w-full h-full object-cover" />
               </div>
+              <div className="px-7 py-7">
+                <h3 className="text-xl font-bold text-gray-900 mb-5">
+                  {card.title} <span className="text-emerald-700 italic">{card.accent}</span>
+                </h3>
+                <ul className="space-y-4">
+                  {card.items.map((li, j) => (
+                    <li key={j} className="flex items-start gap-3">
+                      <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">{li.bold}</p>
+                        <p className="text-gray-400 text-xs mt-0.5">{li.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+
+          {/* Competitive Advantage */}
+          <div className="shrink-0 w-[85vw] sm:w-[45vw] lg:w-[31%] snap-start bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="h-64 overflow-hidden">
+              <img src="https://placecats.com/602/300" alt="" className="w-full h-full object-cover" />
+            </div>
+            <div className="px-7 py-7">
+              <h3 className="text-xl font-bold text-gray-900 mb-5">
+                Competitive <span className="text-emerald-700 italic">Advantage.</span>
+              </h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Embedded at Point of Sale</p>
+                    <p className="text-gray-400 text-xs mt-0.5">Offer financing directly within your existing workflow.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Branded Portals</p>
+                    <p className="text-gray-400 text-xs mt-0.5">White-label retailer and grower portals, out of the box.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Seamless Integration</p>
+                    <p className="text-gray-400 text-xs mt-0.5">Connects with your CRMs, ERPs, and commerce sites.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Dedicated Support</p>
+                    <p className="text-gray-400 text-xs mt-0.5">Our team helps you integrate and launch with ease.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ CATEGORIES HEADER ============ */}
+      <section className="pt-16 md:pt-24 pb-4 px-4 sm:px-6 bg-[#f7faf5]">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 text-center">
+          Supporting The Full Spectrum Of <span className="text-emerald-800 font-bold italic">Agricultural Inputs.</span>
+        </h2>
+      </section>
+
+      {/* ============ CATEGORIES CAROUSEL ============ */}
+      <section className="py-8 md:py-12 px-4 sm:px-6 bg-[#f7faf5]">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide sm:grid sm:grid-cols-5 sm:gap-6 sm:overflow-visible">
+            {[
+              { label: 'Crop Protection', img: '/stock-photo-spraying-machine-working-on-the-green-field-232741255.jpg' },
+              { label: 'Biostimulants', img: '/biostimulants.png' },
+              { label: 'Adjuvants', img: '/stock-photo-rice-is-a-useful-grain-that-is-an-agricultural-crop-that-thai-people-grow-in-large-numbers-for-2401627057.jpg' },
+              { label: 'Nutritionals', img: '/nutritionals.png' },
+              { label: 'Seed', img: '/seed.png' },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="flex flex-col items-center shrink-0 w-[160px] sm:w-auto"
+              >
+                <div className="w-full aspect-[5/6] rounded-2xl overflow-hidden mb-4 group cursor-pointer">
+                  <img
+                    src={item.img}
+                    alt={item.label}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 scale-[1.02]"
+                  />
+                </div>
+                <span className="text-gray-900 font-medium text-sm sm:text-base text-center">{item.label}</span>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ============ QUICK INTRO ============ */}
-      <section className="py-10 md:py-16 px-4 sm:px-6 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-snug mb-6">
-            CFi Is A Digital Financing Platform Built At The Intersection Of{' '}
-            <span className="text-emerald-700 font-extrabold">Fintech And Agriculture.</span>
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-3xl mx-auto">
-            We embed instant, paperless financing directly at the point of sale, connecting 
-            manufacturers, retailers, and growers to accelerate purchasing and unlock early-season 
-            demand. With approvals of up to $1 million in minutes, CFi removes friction from 
-            traditional ag financing.
-          </p>
-          <p className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-700">
-            CFi Isn't Just Financing. It's The Future Of Ag Commerce.
-          </p>
-        </div>
-      </section>
-
-
-      {/* ============ FEATURES PREVIEW ============ */}
-      <section className="py-20 md:py-32 px-4 sm:px-6 bg-gray-50">
+      {/* ============ FOR RETAILERS ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#dde6d5]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-sm font-bold text-emerald-600 tracking-widest uppercase mb-4 block">
-                Why CFi?
+          <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl overflow-hidden shadow-lg"
+            >
+              <img src="/retailer-hero.png" alt="For Retailers" className="w-full h-full object-cover" />
+            </motion.div>
+
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+            >
+              <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-3 block">
+                For Retailers
               </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-6">
-                Built for modern agricultural dealers
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-snug mb-5">
+                Grow Sales With <span className="text-emerald-700">Embedded Financing</span>
               </h2>
-              <p className="text-gray-500 leading-relaxed mb-8">
-                We understand the unique challenges of agricultural financing. 
-                Our platform is designed to help you close deals faster, serve 
-                your customers better, and grow your business.
+              <p className="text-gray-500 leading-relaxed mb-6">
+                Offer your customers instant credit at the point of sale. CFi's platform integrates 
+                seamlessly into your workflow — boosting cart size, attracting new growers, and 
+                locking in loyalty with zero credit risk to you.
               </p>
-              <ul className="space-y-4 mb-8">
-                {[
-                  'Real-time credit decisions in minutes',
-                  'Zero paperwork applications',
-                  'Up to $1M instant approvals',
-                  'White-label dealer portal',
-                ].map((item, i) => (
+              <ul className="space-y-3 mb-8">
+                {['Increase average order value', 'Attract credit-seeking growers', 'Same-day funding for every sale', 'White-label dealer portal'].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                    <span className="text-gray-700">{item}</span>
+                    <span className="text-emerald-600">&#10003;</span>
+                    <span className="text-gray-700 text-sm">{item}</span>
                   </li>
                 ))}
               </ul>
               <Link
-                to="/about"
-                className="inline-flex items-center gap-2 text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
+                to="/retailers"
+                className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Learn more about us
+                Learn More
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
-            <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl p-8 sm:p-10 text-white">
-              <h3 className="text-2xl font-bold mb-6">
-                Driving sales velocity & farmer success
-              </h3>
-              <div className="grid grid-cols-2 gap-6 mb-8">
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">100+</div>
-                  <div className="text-emerald-200 text-sm">Active retailers</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">$50M+</div>
-                  <div className="text-emerald-200 text-sm">Financed annually</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">2 min</div>
-                  <div className="text-emerald-200 text-sm">Average approval</div>
-                </div>
-                <div>
-                  <div className="text-4xl font-black text-white mb-1">30%</div>
-                  <div className="text-emerald-200 text-sm">Sales increase</div>
-                </div>
-              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ FOR MANUFACTURERS ============ */}
+      <section className="py-16 md:py-24 px-4 sm:px-6 bg-[#f7faf5]">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="order-2 md:order-1"
+            >
+              <span className="text-sm font-semibold text-emerald-700 tracking-widest uppercase mb-3 block">
+                For Manufacturers
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-snug mb-5">
+                Accelerate Sales Through <span className="text-emerald-700">Your Dealer Network</span>
+              </h2>
+              <p className="text-gray-500 leading-relaxed mb-6">
+                Embed CFi financing directly into your manufacturer programs. Drive early-season 
+                purchasing, strengthen retailer relationships, and give your channel partners a 
+                powerful tool to move more product.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {['Drive early-season demand', 'Strengthen dealer relationships', 'Branded financing programs', 'Real-time portfolio analytics'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <span className="text-emerald-600">&#10003;</span>
+                    <span className="text-gray-700 text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul>
               <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-full font-semibold hover:bg-emerald-50 transition-colors"
+                to="/manufacturers"
+                className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Get Started
+                Learn More
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
+            </motion.div>
+
+            {/* Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="rounded-2xl overflow-hidden shadow-lg order-1 md:order-2"
+            >
+              <img src="/manufacturer-hero.png" alt="For Manufacturers" className="w-full h-full object-cover" />
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* ============ CTA BANNER ============ */}
-      <section className="py-20 md:py-24 px-4 sm:px-6 bg-gray-900">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">
-            Ag Finance. <span className="text-emerald-500">Delivered.</span>
+      <section className="py-20 md:py-24 px-4 sm:px-6 bg-[#dde6d5]">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-6">
+            Ag Finance. <span className="text-emerald-700">Delivered.</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-10">
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-10">
             Join the fastest growing ag financing platform. Get started today and 
             see the difference CFi can make for your business.
           </p>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-emerald-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-800 transition-colors"
           >
             Contact Us
             <ArrowRight className="w-5 h-5" />
@@ -218,7 +458,7 @@ function HomePage() {
       </section>
 
       {/* ============ FOOTER ============ */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 border-t border-gray-800">
+      <footer className="bg-[#2d3a2e] text-white py-12 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>

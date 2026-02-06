@@ -65,14 +65,14 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Solid header - fixed, slides in on scroll with bounce */}
+      {/* Solid header - fixed, slides in on scroll */}
       <header 
-        className={`fixed left-0 right-0 z-50 px-4 sm:px-6 pt-4 ${
+        className={`fixed left-0 right-0 z-50 ${
           !hasScrolled ? 'invisible' : scrolled ? 'header-visible' : 'header-hidden'
         }`} 
         style={{ top: 0 }}
       >
-        <nav className="max-w-7xl mx-auto rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between bg-white/95 backdrop-blur-md shadow-lg border border-gray-100">
+        <nav className="w-full px-6 sm:px-10 lg:px-16 py-3 flex items-center justify-between bg-[#f7faf5] shadow-lg">
           <Link to="/" className="shrink-0">
             <img src="/logo-cfi.png" alt="CFi" className="h-10 sm:h-12 w-auto" />
           </Link>
@@ -107,7 +107,7 @@ export default function Header() {
 
         {/* Mobile Nav Dropdown */}
         {mobileOpen && (
-          <div className="lg:hidden mt-2 mx-auto max-w-7xl bg-white/95 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+          <div className="lg:hidden bg-white shadow-lg overflow-hidden border-t border-gray-100">
             <nav className="flex flex-col p-4 gap-1">
               {navLinks.map((link) => (
                 <Link
