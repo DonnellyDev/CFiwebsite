@@ -63,6 +63,34 @@ export default function Header() {
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </nav>
+
+        {/* Mobile Nav Dropdown for transparent header */}
+        {mobileOpen && (
+          <div className="lg:hidden bg-white shadow-lg overflow-hidden border-t border-gray-100 mx-[-16px] sm:mx-[-24px] mt-3">
+            <nav className="flex flex-col p-4 gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  onClick={() => setMobileOpen(false)}
+                  className="px-4 py-3 text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg font-medium transition-colors"
+                  activeProps={{
+                    className: 'px-4 py-3 text-emerald-600 bg-emerald-50 rounded-lg font-medium transition-colors',
+                  }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                to="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="mx-4 mt-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 text-sm font-semibold rounded-lg transition-all text-center"
+              >
+                Get In Touch
+              </Link>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Solid header - fixed, slides in on scroll */}

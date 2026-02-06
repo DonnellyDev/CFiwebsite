@@ -311,7 +311,7 @@ function ManufacturersPage() {
             to="/contact"
             className="inline-flex items-center gap-2 bg-emerald-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-800 transition-colors"
           >
-            Connect With Our Team
+            Contact Us
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

@@ -12,7 +12,7 @@ function RetailersPage() {
       {/* ============ HERO ============ */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src="/retailer-hero.png" alt="" className="w-full h-full object-cover" />
+          <img src="/hero-bg.png" alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
         </div>
         <div className="relative z-10 w-full px-6 sm:px-12 lg:px-24 pt-32 pb-20">
@@ -238,7 +238,7 @@ function RetailersPage() {
             to="/contact"
             className="inline-flex items-center gap-2 bg-emerald-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-800 transition-colors"
           >
-            Sign Up
+            Contact Us
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

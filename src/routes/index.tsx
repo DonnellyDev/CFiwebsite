@@ -42,6 +42,8 @@ function AnimatedStat({ num, prefix, suffix, label, delay, text }: { num?: numbe
 
 function HomePage() {
   const [currentStat, setCurrentStat] = useState(0)
+  const [currentCategory, setCurrentCategory] = useState(0)
+  const [currentCard, setCurrentCard] = useState(0)
   const introRef = useRef(null)
   const introInView = useInView(introRef, { once: true, margin: '-80px' })
 
@@ -53,12 +55,55 @@ function HomePage() {
     { value: 'Same-Day', label: 'Funding Capability' },
   ]
 
+  const categories = [
+    { label: 'Crop Protection', img: '/stock-photo-spraying-machine-working-on-the-green-field-232741255.jpg' },
+    { label: 'Biostimulants', img: '/biostimulants.png' },
+    { label: 'Adjuvants', img: '/stock-photo-rice-is-a-useful-grain-that-is-an-agricultural-crop-that-thai-people-grow-in-large-numbers-for-2401627057.jpg' },
+    { label: 'Nutritionals', img: '/nutritionals.png' },
+    { label: 'Seed', img: '/seed.png' },
+  ]
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentStat((prev) => (prev + 1) % mobileStats.length)
     }, 2500)
     return () => clearInterval(interval)
   }, [mobileStats.length])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCategory((prev) => (prev + 1) % categories.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [categories.length])
+
+  const infoCards = [
+    { img: '/carousel-corn-leaves.png', title: 'How It', accent: 'Works.', items: [
+      { bold: 'Embedded at Point of Sale', desc: 'Financing built directly into manufacturer programs.' },
+      { bold: 'Instant Application', desc: 'Growers apply digitally in minutes.' },
+      { bold: 'Immediate Approval & Funding', desc: 'Complete purchases without delays.' },
+      { bold: 'Intelligence & Optimization', desc: 'Real-time data powers smarter decisions.' },
+    ]},
+    { img: '/carousel-corn-cob.png', title: 'Ag Financing', accent: 'Platform.', items: [
+      { bold: 'Up to $1M Credit Lines', desc: 'Large approvals for serious growers.' },
+      { bold: 'Flexible Repayment', desc: 'Terms aligned to harvest cycles.' },
+      { bold: 'Same-Day Funding', desc: 'Retailers get paid fast, every time.' },
+      { bold: '100% Digital', desc: 'Zero paperwork, fully online process.' },
+    ]},
+    { img: '/carousel-farmer.png', title: 'Competitive', accent: 'Advantage.', items: [
+      { bold: 'Embedded at Point of Sale', desc: 'Offer financing directly within your existing workflow.' },
+      { bold: 'Branded Portals', desc: 'White-label retailer and grower portals, out of the box.' },
+      { bold: 'Seamless Integration', desc: 'Connects with your CRMs, ERPs, and commerce sites.' },
+      { bold: 'Dedicated Support', desc: 'Our team helps you integrate and launch with ease.' },
+    ]},
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCard((prev) => (prev + 1) % infoCards.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [infoCards.length])
 
   return (
     <div className="min-h-screen bg-[#f7faf5] overflow-x-hidden">
@@ -160,8 +205,8 @@ function HomePage() {
           </div>
 
           {/* Stats row */}
-          {/* Mobile: auto-cycling */}
-          <div className="sm:hidden">
+          {/* Mobile/Tablet: auto-cycling */}
+          <div className="lg:hidden">
             <div className="flex flex-col items-center text-center min-h-[80px]">
               <div 
                 key={currentStat}
@@ -184,8 +229,8 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Desktop: 5-column count-up */}
-          <div className="hidden sm:grid sm:grid-cols-5 gap-6 border-t border-emerald-800/20 pt-12">
+          {/* Desktop: 5-column, otherwise mobile carousel */}
+          <div className="hidden lg:grid lg:grid-cols-5 gap-8 border-t border-emerald-800/20 pt-12">
             <AnimatedStat num={800} prefix="$" suffix="M+" label="Financing Enabled Annually" delay={0} />
             <AnimatedStat num={100} suffix="+" label="Ag Retail Partners" delay={0.15} />
             <AnimatedStat num={1} prefix="Up to $" suffix="M" label="Instant Credit Approvals" delay={0.3} />
@@ -208,22 +253,48 @@ function HomePage() {
 
       {/* ============ INFO CAROUSEL ============ */}
       <section className="pt-10 md:pt-14 pb-14 md:pb-18 bg-[#f7faf5]">
-        <div className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 px-6 sm:px-12 lg:px-16 pb-4" style={{ scrollBehavior: 'smooth' }}>
-          {[
-            { img: '/carousel-corn-leaves.png', title: 'How It', accent: 'Works.', items: [
-              { bold: 'Embedded at Point of Sale', desc: 'Financing built directly into manufacturer programs.' },
-              { bold: 'Instant Application', desc: 'Growers apply digitally in minutes.' },
-              { bold: 'Immediate Approval & Funding', desc: 'Complete purchases without delays.' },
-              { bold: 'Intelligence & Optimization', desc: 'Real-time data powers smarter decisions.' },
-            ]},
-            { img: '/carousel-corn-cob.png', title: 'Ag Financing', accent: 'Platform.', items: [
-              { bold: 'Up to $1M Credit Lines', desc: 'Large approvals for serious growers.' },
-              { bold: 'Flexible Repayment', desc: 'Terms aligned to harvest cycles.' },
-              { bold: 'Same-Day Funding', desc: 'Retailers get paid fast, every time.' },
-              { bold: '100% Digital', desc: 'Zero paperwork, fully online process.' },
-            ]},
-          ].map((card, i) => (
-            <div key={i} className="shrink-0 w-[85vw] sm:w-[45vw] lg:w-[31%] snap-start bg-white rounded-lg shadow-md overflow-hidden">
+        {/* Small screens: auto-cycling single card */}
+        <div className="lg:hidden px-6 sm:px-12">
+          <div className="max-w-sm mx-auto">
+            <div key={currentCard} className="animate-fade-in bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="h-52 overflow-hidden">
+                <img src={infoCards[currentCard].img} alt="" className="w-full h-full object-cover" />
+              </div>
+              <div className="px-7 py-7">
+                <h3 className="text-xl font-bold text-gray-900 mb-5">
+                  {infoCards[currentCard].title} <span className="text-emerald-700 italic">{infoCards[currentCard].accent}</span>
+                </h3>
+                <ul className="space-y-4">
+                  {infoCards[currentCard].items.map((li, j) => (
+                    <li key={j} className="flex items-start gap-3">
+                      <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">{li.bold}</p>
+                        <p className="text-gray-400 text-xs mt-0.5">{li.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-center gap-2 mt-6">
+            {infoCards.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentCard(i)}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  i === currentCard ? 'bg-emerald-700' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Large screens: 3-column grid */}
+        <div className="hidden lg:flex gap-6 px-6 sm:px-12 lg:px-16 pb-4 justify-center">
+          {infoCards.map((card, i) => (
+            <div key={i} className="w-[31%] bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-64 overflow-hidden">
                 <img src={card.img} alt="" className="w-full h-full object-cover" />
               </div>
@@ -245,48 +316,6 @@ function HomePage() {
               </div>
             </div>
           ))}
-
-          {/* Competitive Advantage */}
-          <div className="shrink-0 w-[85vw] sm:w-[45vw] lg:w-[31%] snap-start bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="h-64 overflow-hidden">
-              <img src="/carousel-farmer.png" alt="" className="w-full h-full object-cover" />
-            </div>
-            <div className="px-7 py-7">
-              <h3 className="text-xl font-bold text-gray-900 mb-5">
-                Competitive <span className="text-emerald-700 italic">Advantage.</span>
-              </h3>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Embedded at Point of Sale</p>
-                    <p className="text-gray-400 text-xs mt-0.5">Offer financing directly within your existing workflow.</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Branded Portals</p>
-                    <p className="text-gray-400 text-xs mt-0.5">White-label retailer and grower portals, out of the box.</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Seamless Integration</p>
-                    <p className="text-gray-400 text-xs mt-0.5">Connects with your CRMs, ERPs, and commerce sites.</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-gray-400 text-sm mt-0.5">&#10003;</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Dedicated Support</p>
-                    <p className="text-gray-400 text-xs mt-0.5">Our team helps you integrate and launch with ease.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -300,21 +329,46 @@ function HomePage() {
       {/* ============ CATEGORIES CAROUSEL ============ */}
       <section className="py-8 md:py-12 px-4 sm:px-6 bg-[#f7faf5]">
         <div className="max-w-6xl mx-auto">
-          <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide sm:grid sm:grid-cols-5 sm:gap-6 sm:overflow-visible">
-            {[
-              { label: 'Crop Protection', img: '/stock-photo-spraying-machine-working-on-the-green-field-232741255.jpg' },
-              { label: 'Biostimulants', img: '/biostimulants.png' },
-              { label: 'Adjuvants', img: '/stock-photo-rice-is-a-useful-grain-that-is-an-agricultural-crop-that-thai-people-grow-in-large-numbers-for-2401627057.jpg' },
-              { label: 'Nutritionals', img: '/nutritionals.png' },
-              { label: 'Seed', img: '/seed.png' },
-            ].map((item, i) => (
+          {/* Small screens: auto-cycling single card */}
+          <div className="lg:hidden">
+            <div className="flex flex-col items-center text-center">
+              <div 
+                key={currentCategory}
+                className="animate-fade-in flex flex-col items-center"
+              >
+                <div className="w-48 aspect-[5/6] rounded-2xl overflow-hidden mb-4">
+                  <img
+                    src={categories[currentCategory].img}
+                    alt={categories[currentCategory].label}
+                    className="w-full h-full object-cover scale-[1.02]"
+                  />
+                </div>
+                <span className="text-gray-900 font-medium text-base">{categories[currentCategory].label}</span>
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              {categories.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentCategory(i)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    i === currentCategory ? 'bg-emerald-700' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Large screens: 5-column grid */}
+          <div className="hidden lg:grid lg:grid-cols-5 gap-6">
+            {categories.map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-30px' }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="flex flex-col items-center shrink-0 w-[160px] sm:w-auto"
+                className="flex flex-col items-center"
               >
                 <div className="w-full aspect-[5/6] rounded-2xl overflow-hidden mb-4 group cursor-pointer">
                   <img
